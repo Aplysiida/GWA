@@ -130,7 +130,7 @@ class VoxGridBase:
 
                 pbar.close()
 
-            
+
             if Nprocs==1: #keep separate for debug purposes
                 #process without intermediate files
                 pbar = tqdm(total=Nvox,desc=f'single process voxgrid processing',ascii=True,leave=False)
@@ -188,6 +188,9 @@ class VoxGridBase:
             self.print(f'tribox checks={N_tribox_tests_tot} for {Ntris} tris and {Nvox} vox ({N_tribox_tests_tot/(Nvox*Ntris)*100.0:.2f} %)')
 
             #cleanup shared memory
+            del Ntris_vox
+            del N_tribox_tests
+
             Ntris_vox_shm.close()
             Ntris_vox_shm.unlink()
 
@@ -209,8 +212,8 @@ class VoxGridBase:
         from common.box import Box
         Nvox = self.Nvox
         self.print('drawing boxes..')
-        boxtris = np.zeros((Nvox*12,3)) 
-        boxpts = np.zeros((Nvox*8,3)) 
+        boxtris = np.zeros((Nvox*12,3))
+        boxpts = np.zeros((Nvox*8,3))
         tp = 0
         #build up a triangular mesh for all boxes in one go
         for i in range(len(self.nonempty_idx)):
@@ -218,7 +221,7 @@ class VoxGridBase:
             assert len(vox.tri_idxs)>0
             box = Box(*(vox.bmax-vox.bmin),shift=vox.bmin,centered=False)
             boxtris[i*12:(i+1)*12,:] = box.tris + tp
-            boxpts[i*8:(i+1)*8,:] = box.verts 
+            boxpts[i*8:(i+1)*8,:] = box.verts
             tp += 8
         self.print(f'{len(self.nonempty_idx)=}')
         self.print(f'{tp=}')

@@ -1,0 +1,3 @@
+[submodule "pygsound"]
+	path = pygsound
+	url = git@github.com:GAMMA-UMD/pygsound.git
